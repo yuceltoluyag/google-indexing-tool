@@ -1,0 +1,26 @@
+# Environments
+.venv/
+.env
+
+# Cache
+__pycache__/
+*.pyc
+
+# Credentials
+service-account.json
+
+# Data
+
+# Logs
+*.log
+
+# IDE
+.idea/
+.vscode/
+
+# Config
+bing_api_key.txt
+config.ini
+
+# Temp files
+.~lock.article_links.csv#

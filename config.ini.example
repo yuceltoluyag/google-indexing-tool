@@ -1,0 +1,16 @@
+[PELICAN]
+ARTICLES_PATH = content/articles
+SITE_URL = https://yuceltoluyag.github.io/
+
+[DEFAULT]
+CSV_FILE = article_links.csv
+SERVICE_ACCOUNT_FILE = YOUR_SERVICE_ACCOUNT_FILE.json
+LOG_FILE = indexing.log
+
+[API]
+URL = https://indexing.googleapis.com/v3/urlNotifications:publish
+REQUEST_DELAY_SECONDS = 10
+
+[BING]
+API_KEY = YOUR_BING_API_KEY
+KEY_LOCATION = YOUR_BING_KEY_LOCATION_URL

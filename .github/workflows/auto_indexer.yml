@@ -1,0 +1,54 @@
+name: Auto Google Indexer
+
+on:
+  schedule:
+    # Runs at 13:00 UTC on the 1st day of every month
+    - cron: '0 13 1 * *'
+  workflow_dispatch: # Allows manual triggering
+
+jobs:
+  build-and-index:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12' # En güncel stable sürüm
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Check for new URLs
+        id: check_urls
+        run: |
+          python .github/scripts/check_new_urls.py
+        # The script writes to GITHUB_OUTPUT, so we can use it in later steps
+
+      # Only proceed if there are new URLs to process
+      - name: Create Service Account File from Secret
+        if: steps.check_urls.outputs.has_new_urls == 'true'
+        run: |
+          python -c "import json, os; json_data = os.environ['SERVICE_ACCOUNT_JSON']; f = open('service-account.json', 'w'); f.write(json_data); f.close()"
+        env:
+          SERVICE_ACCOUNT_JSON: ${{ secrets.SERVICE_ACCOUNT_JSON }}
+
+      - name: Run Google Indexing Tool
+        if: steps.check_urls.outputs.has_new_urls == 'true'
+        run: python google_indexing_api_tool.py PUBLISH
+
+      - name: Display Indexing Log
+        if: always()
+        run: |
+          if [ -f "indexing.log" ]; then
+            echo "--- Content of indexing.log ---"
+            cat indexing.log
+            echo "-------------------------------"
+          else
+            echo "indexing.log not found."
+          fi
