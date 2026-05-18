@@ -5,6 +5,7 @@ This project contains a set of Python scripts to interact with the Google Indexi
 ## Files
 
 - `google_indexing_api_tool.py`: A command-line tool to send indexing requests to the Google API.
+- `check_google_index_status.py`: A tool to query the actual indexation status of your URLs in Google Search Console.
 - `bing_indexnow_api_tool.py`: A module for sending indexing requests to the Bing IndexNow API.
 - `run_bing_submission.py`: A script to execute the Bing submission process.
 - `export_article_links.py`: A script to export article links from a Pelican blog system to a CSV file.
@@ -49,6 +50,8 @@ b. **Create a Service Account:** - Go to the [Service Accounts page](https://con
 c. **Generate a JSON Key:** - From the service account's "Manage keys" section, create a new JSON key. Rename the downloaded file to `service-account.json` and place it in the project root.
 
 d. **Grant Access in Google Search Console:** - In your site's [Google Search Console](https://search.google.com/search-console/users), add the service account's email address as a user with **Owner** permission.
+
+e. **Enable the Search Console API:** - For the indexing status checker script to work, also go to the [Google Search Console API](https://console.developers.google.com/apis/api/searchconsole.googleapis.com/overview) and enable it for the same Google Cloud project.
 
 ### 3. Bing IndexNow Setup
 
@@ -96,6 +99,31 @@ python run_bing_submission.py
 ```
 
 The scripts will only submit URLs that have not been successfully submitted before and will log their progress to the console and to the `indexing.log` file.
+
+### Step 3: Check Google Indexation Status
+
+You can check whether your pages are actually indexed in Google's database and update your local tracking CSV using the `check_google_index_status.py` script.
+
+**To check a single URL's detailed coverage status:**
+```bash
+python check_google_index_status.py --url https://your-site.com/your-article/
+```
+
+**To check the newest N articles in your CSV:**
+```bash
+python check_google_index_status.py --newest 10
+```
+
+**To bulk-check all URLs in your CSV and update their live index status:**
+This command queries Google for all URLs not marked as indexed (`PASS`) and updates the `google_index_status`, `google_index_details`, and `google_last_crawl` columns in `article_links.csv`.
+```bash
+python check_google_index_status.py --bulk
+```
+
+#### Status Outcomes:
+- **`[PASS]`**: The page is successfully indexed and appearing in Google Search.
+- **`[FAIL]`**: The page has coverage errors and indexing is blocked (e.g., `noindex` tag, crawling errors).
+- **`[NEUTRAL]`**: The page is currently not indexed. It might be in the crawl queue or Googlebot hasn't discovered it yet.
 
 ## API Limits and Responsibility
 
