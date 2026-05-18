@@ -1,5 +1,6 @@
 # Environments
 .venv/
+venv/
 .env
 
 # Cache
@@ -8,6 +9,7 @@ __pycache__/
 
 # Credentials
 service-account.json
+gugulindexapi-c865a5dfeb66.json
 
 # Data
 
