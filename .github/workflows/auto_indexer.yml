@@ -24,17 +24,17 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Create Service Account File from Secret
-        run: |
-          python -c "import json, os; json_data = os.environ['SERVICE_ACCOUNT_JSON']; f = open('service-account.json', 'w'); f.write(json_data); f.close()"
-        env:
-          SERVICE_ACCOUNT_JSON: ${{ secrets.SERVICE_ACCOUNT_JSON }}
-
       - name: Create config.ini from Secret
         run: |
           python -c "import os; data = os.environ.get('CONFIG_INI', ''); f = open('config.ini', 'w'); f.write(data); f.close()"
         env:
           CONFIG_INI: ${{ secrets.CONFIG_INI }}
+
+      - name: Create Service Account File from Secret
+        run: |
+          python -c "import configparser, os; config = configparser.ConfigParser(); config.read('config.ini'); filename = config.get('DEFAULT', 'SERVICE_ACCOUNT_FILE', fallback='service-account.json'); json_data = os.environ['SERVICE_ACCOUNT_JSON']; f = open(filename, 'w'); f.write(json_data); f.close(); print(f'Created service account file: {filename}')"
+        env:
+          SERVICE_ACCOUNT_JSON: ${{ secrets.SERVICE_ACCOUNT_JSON }}
 
       - name: Run Smart Google Indexer
         run: python main.py smart --limit 50
@@ -45,7 +45,8 @@ jobs:
       - name: Clean up Credentials
         if: always()
         run: |
-          rm -f service-account.json config.ini
+          python -c "import configparser, os; config = configparser.ConfigParser(); config.read('config.ini') if os.path.exists('config.ini') else None; filename = config.get('DEFAULT', 'SERVICE_ACCOUNT_FILE', fallback='service-account.json') if 'DEFAULT' in config else 'service-account.json'; os.remove(filename) if os.path.exists(filename) else None"
+          rm -f config.ini
 
       - name: Commit and push changes
         run: |
