@@ -40,7 +40,37 @@ KEY_LOCATION = https://yourdomain.com/your_indexnow_api_key.txt
 
 - **COOLDOWN_DAYS**: Number of days to shield a page from being re-submitted to Google Indexing API if it is not yet indexed.
 
-## Installation & Setup
+## 📦 Global CLI Installation (Multi-Project Support)
+
+If you have multiple blog projects and want to run this indexing tool across all of them without copying the codebase, you can install the tool as a global CLI package directly from GitHub:
+
+```bash
+pip install git+https://github.com/yuceltoluyag/google-indexing-tool.git
+```
+
+This registers a global `google-indexer` command in your system. To use it in any project:
+
+1. Navigate to your blog project's root folder:
+   ```bash
+   cd /path/to/my-other-blog
+   ```
+2. Place your blog-specific `config.ini` and `service-account.json` (or whichever name is referenced in `config.ini`) in that folder.
+3. Run any command directly:
+   ```bash
+   # Export Pelican posts to CSV
+   google-indexer export
+
+   # Perform smart Google inspection and submission
+   google-indexer smart --limit 50
+
+   # Submit to Bing IndexNow
+   google-indexer bing
+   ```
+*The CLI automatically reads the local `config.ini` and updates/creates the `article_links.csv` in whichever folder you run the command.*
+
+---
+
+## Installation & Setup (Local Development)
 
 ### 1. Common Setup
 
