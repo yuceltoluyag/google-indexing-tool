@@ -2,3 +2,7 @@ google-api-python-client
 google-auth-oauthlib
 pandas
 requests
+pydantic
+ruff
+uv
+
