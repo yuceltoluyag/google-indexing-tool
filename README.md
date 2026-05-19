@@ -88,14 +88,7 @@ python main.py export
 ```
 *This command creates or updates the `article_links.csv` file in the project root.*
 
-### Step 2: Query Existing Pages' Google Index Status (Bulk Inspection)
-To avoid wasting Google API quotas, perform a bulk check to query which pages are already indexed by Google:
-```bash
-python main.py inspect --bulk --limit 100
-```
-*This marks already-indexed pages as `PASS`, shielding them from being scanned or submitted again in subsequent steps.*
-
-### Step 3: Submit New URLs to Bing IndexNow
+### Step 2: Submit New URLs to Bing IndexNow
 Submit all your new or updated URLs to Bing in a single batch request:
 ```bash
 # Preview the submission (optional dry-run):
@@ -106,7 +99,7 @@ python main.py bing
 ```
 *Since Bing IndexNow supports batch submissions, all pending URLs are sent efficiently in a single API call.*
 
-### Step 4: Run the Smart Google Indexing Workflow (Daily Routine)
+### Step 3: Run the Smart Google Indexing Workflow (Daily Routine)
 Detect non-indexed pages and submit only the pending ones (status `NEUTRAL`/`FAIL`) to the Google Indexing API, respecting the cooldown rules:
 ```bash
 # Run a dry-run simulation:
@@ -115,7 +108,7 @@ python main.py smart --dry-run --limit 10
 # Start the live status check and submission loop:
 python main.py smart --limit 50
 ```
-*This command checks GSC status, submits pending pages to the Indexing API, and initiates a 3-day cooldown timer for submitted pages to prevent repeated checks and conserve API quotas.*
+*This command automatically queries Search Console for the status of your non-indexed URLs. If they are already indexed, it updates their status to `PASS`. If they are not indexed, it submits them to the Indexing API and initiates a 3-day cooldown timer to prevent repeated requests.*
 
 ---
 
@@ -129,19 +122,18 @@ Find all published posts in the Pelican articles folder and append new ones to t
 python main.py export
 ```
 
-### 2. Inspect Google Index Status
-Query Search Console for actual index status of pages:
+### 2. Inspect Google Index Status (Troubleshooting & Debugging)
+These commands are optional utility tools used to query the Google Search Console index status without triggering any Indexing API submissions or cooldowns.
 
-- **Single URL Check**:
+- **Single URL Check** (inspects detailed coverage for a specific page):
   ```bash
-  python main.py inspect --url https://yuceltoluyag.github.io/my-post/
+  python main.py inspect --url https://yourdomain.com/my-post/
   ```
-- **Newest N URLs Check**:
+- **Newest N URLs Check** (inspects the status of the last N entries in the CSV):
   ```bash
   python main.py inspect --newest 10
   ```
-- **Bulk Check**:
-  Inspects pending (non-indexed) URLs up to the limit (default 100):
+- **Bulk Check** (inspects pending entries up to a specified limit):
   ```bash
   python main.py inspect --bulk --limit 50
   ```
