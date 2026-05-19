@@ -24,5 +24,10 @@ codingrules.md
 bing_api_key.txt
 config.ini
 
+# Packaging and Distribution
+*.egg-info/
+build/
+dist/
+
 # Temp files
 .~lock.article_links.csv#

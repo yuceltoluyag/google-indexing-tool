@@ -1,2 +1,0 @@
-[console_scripts]
-google-indexer = src.indexing_tool.cli:main
