@@ -10,6 +10,7 @@ LOG_FILE = indexing.log
 [API]
 URL = https://indexing.googleapis.com/v3/urlNotifications:publish
 REQUEST_DELAY_SECONDS = 10
+COOLDOWN_DAYS = 3
 
 [BING]
 API_KEY = YOUR_BING_API_KEY
