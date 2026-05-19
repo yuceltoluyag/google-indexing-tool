@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=61.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "google-indexing-tool"
+version = "1.0.0"
+description = "A smart CLI tool to automate Google Search Console inspection, Google Indexing API, and Bing IndexNow submissions."
+readme = "README.md"
+requires-python = ">=3.12"
+authors = [
+    { name = "Yücel Toluyag", email = "yuceltoluyag@gmail.com" }
+]
+dependencies = [
+    "google-api-python-client>=2.100.0",
+    "google-auth-oauthlib>=1.0.0",
+    "pandas>=2.0.0",
+    "requests>=2.31.0",
+    "pydantic>=2.0.0",
+]
+
+[project.scripts]
+google-indexer = "src.indexing_tool.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["src*"]
