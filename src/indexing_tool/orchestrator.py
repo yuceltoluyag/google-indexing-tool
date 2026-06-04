@@ -99,6 +99,8 @@ class SmartIndexerOrchestrator:
                     continue
                 pending_candidates.append((i, link))
 
+            # Prioritize never-submitted URLs, then oldest submitted ones to avoid starvation loop
+            pending_candidates.sort(key=lambda item: item[1].last_successful_submission or "")
             to_inspect = pending_candidates[:limit]
             logger.info(
                 f"Checking indexation status for {len(to_inspect)} pending URLs (bulk limit {limit}, cooldown active)..."
@@ -156,6 +158,8 @@ class SmartIndexerOrchestrator:
                 continue
             to_process.append((i, link))
 
+        # Prioritize never-submitted URLs, then oldest submitted ones to avoid starvation loop
+        to_process.sort(key=lambda item: item[1].last_successful_submission or "")
         to_process = to_process[:limit]
         if not to_process:
             logger.info(

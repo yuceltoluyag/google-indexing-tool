@@ -39,7 +39,7 @@ jobs:
           SERVICE_ACCOUNT_JSON: ${{ secrets.SERVICE_ACCOUNT_JSON }}
 
       - name: Run Smart Google Indexer
-        run: python main.py smart --limit 50
+        run: python main.py smart --limit 150
 
       - name: Run Bing IndexNow
         run: python main.py bing

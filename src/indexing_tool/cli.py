@@ -64,8 +64,8 @@ def main() -> None:
     smart_parser.add_argument(
         "--limit",
         type=int,
-        default=50,
-        help="Maximum number of URLs to check (default: 50)",
+        default=150,
+        help="Maximum number of URLs to check (default: 150)",
     )
 
     # bing sub-command
